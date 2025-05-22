@@ -1,0 +1,21 @@
+{
+    "dependencies": {
+      "bluebird": "^3.7.2",
+      "vue": "^3.4.21",
+      "@vue-flow/core": "^1.33.5",
+      "@vue-flow/background" : "^1.3.0"
+    },
+    "devDependencies": {
+      "@parcel/transformer-sass": "^2.12.0",
+      "@parcel/transformer-vue": "^2.12.0",
+      "parcel": "^2.12.0",
+      "sass": "^1.71.1"
+    },
+    "scripts": {
+      "client:devel": "parcel serve client/index.html --no-autoinstall --dist-dir build/devel",
+      "client:build": "parcel build client/index.html --no-autoinstall --dist-dir build/final --public-url ./"
+    },
+    "alias": {
+      "mindmap" : "./client"
+    }
+  }
