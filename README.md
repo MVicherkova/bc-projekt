@@ -81,7 +81,7 @@ The nodes can be moved freely by using the cursor and connect them by dragging b
 There are two ways how a node can be removed from the circuit:
 
 - You can select the node and press the red **Remove node** button or
-- After selecting the node simply press **Backspace** on your keyboard.
+- After selecting the node simply press **Backspace**.
 
 
 ### Generating matrices
