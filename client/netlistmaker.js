@@ -60,7 +60,7 @@ function get_output_children_ids(id, node_map){
 }
 
 function get_input_children_ids(id, node_map){
-    node = node_map.get(id);
+    const node = node_map.get(id);
     if ((node.type === 'output') && !('parentNode' in node)){
         return [node.id];
     }
@@ -137,7 +137,7 @@ function assign_depths(node_map, edge_map){
     const layer_id_map = new Map();
     layer_id_map.set(0, []);
     let n = 0;
-    depths=[];
+    let depths=[];
     for (const element of node_map){
         if (!('parentNode' in element [1])){
             d = get_depth(element[1].id, node_map, edge_map);
@@ -281,7 +281,7 @@ function assign_mode_numbers(layer_info, node_map, edge_map){
     const winfo = new Map();
     layer_info.orphan_map = new Map();
     for (let i = 0; i<layer_info.layer_number+1; i++) {
-        width_info = assign_mode_numbers_in_layer(i, layer_info, node_map, edge_map);
+        let width_info = assign_mode_numbers_in_layer(i, layer_info, node_map, edge_map);
         winfo.set(i, width_info);
     };
     layer_info.winfo = winfo; //save information about layer widths
@@ -303,11 +303,18 @@ function writeAndFormatJsonFile(filePath, data) {
     fs.writeFileSync(filePath, jsonFile);
   }
 
-function create_netlist(node_map, layer_info, parsedData){
-    netlist = new Object();
-    arr1 = [];
-    unconnected_nodes = [];
-    for (key of graph_data.node_map){
+function create_netlist(graph_data, layer_info, parsedData){
+    //netlist = new Object();
+    //arr1 = [];
+    //unconnected_nodes = [];
+    //for (key of graph_data.node_map){
+    let netlist = new Object();
+    let arr1 = [];
+    let unconnected_nodes = [];
+    let node = null;
+    let depth = null;
+    //for (const key of graph_data.node_map){
+    for (const key of graph_data.node_map){
         //key [0] = id, key [1] = node (with the id of key[0])
         if (!('parentNode' in key [1])){
             node = findNodeByID(parsedData.nodes, key[0]);
@@ -356,7 +363,7 @@ function create_netlist(node_map, layer_info, parsedData){
     for (let i = 0; i < arr1.length; i++){
         node = findNodeByID(parsedData.nodes, arr1[i][1]);
         depth = get_depth (node.id, graph_data.node_map, graph_data.edge_map);
-        set = layer_info.orphan_map.get(depth);
+        const set = layer_info.orphan_map.get(depth);
         let valuesArray = [...set];
         netlist [arr1[i][1]]= {
             type : node.type,
@@ -376,7 +383,7 @@ function analyze_graph(parsedData){
     graph_data = map_the_nodes(parsedData);
     const layers_data = assign_depths(graph_data.node_map, graph_data.edge_map);
     assign_mode_numbers(layers_data, graph_data.node_map, graph_data.edge_map);
-    const netlist = create_netlist(graph_data.node_map,layers_data, parsedData);
+    const netlist = create_netlist(graph_data, layers_data, parsedData);
     
     return netlist;
 }
