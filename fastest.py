@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from governor import governor
 import json
 from pydantic import BaseModel
@@ -17,6 +18,13 @@ async def lifespan (app: FastAPI):
     yield
 
 app = FastAPI(lifespan = lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # OR: ["http://localhost:5173"] to restrict
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Serve static files on root path
 app.mount('/static', StaticFiles(
@@ -31,6 +39,7 @@ async def root():
 
 @app.get('/api/greetings')
 async def greet ():
+    print("Someone greets me!")
 
     return {
         'msg' : "hello world"
@@ -41,7 +50,8 @@ class Netlist(BaseModel):
 
 @app.post("/api/dictionary")
 async def get_netlist(netlist: Netlist):
-    received = json.dumps(netlist.data)
+    # received = json.dumps(netlist.data)
+    print("Recieved:", netlist)
     my_netlist = netlist.data["netlist"]
     np.set_printoptions(precision = 4)
     final = get_final_matrix(my_netlist)
