@@ -187,11 +187,11 @@
   }    
 
   function removeSelectedNode(){
-      data = JSON.stringify(toObject());
+      const data = JSON.stringify(toObject());
       const JsonData = JSON.parse(data);
-      for (element of getSelectedNodes.value) {
+      for (const element of getSelectedNodes.value) {
         removeNodes(element.id);
-        for (el of JsonData.nodes){
+        for (const el of JsonData.nodes){
           if (el.parentNode === element.id){
             removeNodes(el.id)
           }; 
@@ -202,7 +202,7 @@
   function getChildNodesByID(id){
     const graph = toObject();
     let ids = new Array();
-    for (node of graph.nodes){
+    for (const node of graph.nodes){
       if (node.parentNode === id){        
         ids.push(node.id);
       }
@@ -238,17 +238,17 @@
   function showNetlist(){
     const string = JSON.stringify(toObject(), undefined, 2);
     const parsedData = JSON.parse(string);
-    graph_data = map_the_nodes(parsedData);
+    const graph_data = map_the_nodes(parsedData);
     const layers_data = assign_depths(graph_data.node_map, graph_data.edge_map);
     assign_mode_numbers(layers_data, graph_data.node_map, graph_data.edge_map);
-    const netlist = create_netlist(graph_data.node_map,layers_data, parsedData);
+    const netlist = create_netlist(graph_data, layers_data, parsedData);
     return netlist
   }
 
   //computing numeric martix
 
   async function saveNetlist () {
-    my_object = showNetlist()
+    let my_object = showNetlist()
     try{
       const response = await fetch('/api/dictionary', {
         method: 'POST',
@@ -274,7 +274,7 @@
   //computing symbolic matrix 
 
   async function saveNetlist2 () {
-    my_object = showNetlist()
+    const my_object = showNetlist()
     try{
       const response = await fetch('/api/dictionary1', {
         method: 'POST',
@@ -303,7 +303,7 @@
   for (const change of changes) {
     if (change.type === 'remove') {
       let child_ids = getChildNodesByID(change.id);
-      for (id of child_ids){
+      for (const id of child_ids){
         removeNodes(child_ids);
       };
       nextChanges.push(change);
